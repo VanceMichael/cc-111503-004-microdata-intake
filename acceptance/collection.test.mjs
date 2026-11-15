@@ -31,3 +31,16 @@ test('shared-reference traversal terminates without global consumption', async (
     assert.ok(machines.every(row => row.properties.manufacturer[0] === 'Maker M'));
   });
 });
+
+test('shared property revisions propagate without turning reordered scopes into new observations', async () => {
+  await run('revision', async (result, source) => {
+    assert.ok(source.requests.includes('/entry') && source.requests.includes('/r2'));
+    assert.equal(result.versions.length, 2);
+    const updated = result.changes.filter(row => row.kind === 'updated').map(row => row.observationKey).sort();
+    assert.deepEqual(updated, ['device-a', 'observation-b']);
+    assert.equal(result.changes.some(row => row.kind === 'added' && row.revision === 'r2'), false);
+    const current = result.records.filter(row => row.itemid === 'urn:unit:A');
+    assert.ok(current.every(row => row.properties.manufacturer[0] === 'Maker M2'));
+    assert.equal(result.versions[0].records.find(row => row.observationKey === 'device-a').properties.manufacturer[0], 'Maker M');
+  });
+});

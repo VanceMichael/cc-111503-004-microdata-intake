@@ -17,3 +17,7 @@
 ## 公开的结果字段
 
 `acceptance/collection.test.mjs` 给出当前集成方使用的结果字段及最小示例，说明的是输出契约而非内部处理步骤。除这些示例外，以上来源语义也属于功能范围，不能靠场景名称分支返回固定答案。`status` 仅在对应资料闭合且可靠取得时为 complete。
+
+## 连续修订交付
+
+source.pageKey标识页面谱系，source.revisions按来源发布顺序给出revision和path。需领取每版原页；范围内itemscope元素的DOM id是本站稳定observationKey，限定在pageKey内，不是itemid；无稳定id者不得凭顺序假定跨版相同。每版结果独立保存，records是末版观察；versions为{revision,records}历史列表，changes为{revision,kind,observationKey}的变化交付，kind为added/updated/removed。初版视为added；仅出现顺序变化不构成updated，共享属性的有效值变化影响所有实际引用者。字段证据绑定实际页面修订，不能把旧版证据引用改指新页。
