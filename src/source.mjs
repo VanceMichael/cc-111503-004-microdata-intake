@@ -17,7 +17,7 @@ export async function fixture(scenario = 'normal') {
   const source = await serve((request, response) => {
     response.writeHead(200, { 'content-type': 'text/html' });
     const html = scenario === 'cycle'
-      ? page.replace('id="shared"', 'id="shared" itemref="shared"') : page;
+      ? page.replace('<body>', '<body id="body">').replace('itemref="shared"', 'itemref="shared body"') : page;
     response.end(html);
   });
   return { ...source, path: '/entry' };
