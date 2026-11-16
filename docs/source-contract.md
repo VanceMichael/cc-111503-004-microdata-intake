@@ -18,7 +18,9 @@
 
 ## 接收接口
 
-src/intake.mjs 已有 preview(source, store) 和 previewForm(source, store)。新增 collect(source, store) 处理 jobs；调用方创建与关闭来源和 Inbox。records 仅包含收到有效草稿回执的条目，字段含 jobId、receipt 和 evidence；pending 含 jobId、reason 及可用定位证据。失败、身份漂移或歧义不得产生 POST，多个工作项的状态相互独立。原页、回读页、实际发送的键值对与响应均以 Inbox 保留，证据必须能回到实际页面节点，而非只保留重建字符串。
+src/intake.mjs 提供 preview(source, store)、previewForm(source, store) 和 collect(source, store)；调用方创建与关闭来源和 Inbox。records 仅包含收到有效草稿回执的条目，字段含 jobId、receipt 和 evidence；pending 含 jobId、reason、code 及可用定位证据。失败、身份漂移或歧义不得产生 POST，多个工作项的状态相互独立。原页、回读页、实际发送的键值对与响应均以 Inbox 保留，证据必须能回到实际页面节点，而非只保留重建字符串。
+
+定位计划的证据以 `locator-plan` 存入 Inbox，内容包含表单、字段与提交者的节点字节区间（指向 `form-initial` 证据）及名称计算参与节点，records 的 evidence 是可直接在 `store.evidence()` 中查到的字符串 id。实际请求体另存为 `draft-request-body`，响应存为 `draft-response`；`store.list('drafts')` 记录实际送出的字段顺序与目标，`store.list('pending')` 保留转人工原因。
 
 当前目录资料的预览入口保持兼容；历史 microdata 来源仍用于已有预览检查，但本次新增接口处理的是门户表单，不需要增加旧目录的批量实体采集。
 
